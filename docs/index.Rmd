@@ -1,5 +1,5 @@
 ---
-title: "Introduction to R"
+title: "Producing Reports with knitr and R"
 subtitle: "2018 CODATA-RDA School of Research Data Science"
 author: "[Beatriz Milz](https://beatrizmilz.github.io) - R-Ladies São Paulo"
 date: "December 5th, 2018"
