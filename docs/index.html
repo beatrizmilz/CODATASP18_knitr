@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Beatriz Milz - R-Ladies São Paulo" />
+    <link href="libs/remark-css/kunoichi.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to R
+## 2018 CODATA-RDA School of Research Data Science
+### <a href="https://beatrizmilz.github.io">Beatriz Milz</a> - R-Ladies São Paulo
+### December 5th, 2018
+
+---
+
+class:  inverse, center, middle
+
+
+# Introduction to R
+
+[2018 CODATA-RDA School of Research Data Science](http://www.ictp-saifr.org/2018-codata-rda-school-of-research-data-science/)
+
+#Course material
+
+## SW Carpentry
+Programming with R - [Best Practices for Writing R Code](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+
+R for Reproducible Scientific Analysis - [Producing Reports With knitr](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+ 
+ 
+---
+class:  inverse, center, middle
+
+#[Best Practices for Writing R Code](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+---
+class:  inverse, center, middle
+&lt;img src="imagens/overview.png" style="display: block; margin: auto;" /&gt;
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+---
+class: middle
+#Keep track of who wrote your code and its intended purpose
+
+- Starting your code with an annotated description of what the code does when it is run;
+
+- That will help you when you have to look at or change it in the future. 
+
+
+```r
+# This is code to replicate the analyses and figures from my
+#2014 Science paper.
+#Code developed by Sarah Supp, Tracy Teal, and Jon Borelli
+```
+
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+---
+class: middle
+#Be explicit about the requirements and dependencies of your code
+
+- Loading all of the packages that will be necessary to run your code (using `library`);
+
+- Is a nice way of indicating which packages are necessary to run your code.
+
+
+```r
+library(ggplot2)
+library(reshape)
+library(vegan)
+```
+
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+---
+class: middle
+#Keep track of who wrote your code and its intended purpose
+
+Another way you can be explicit about the requirements of your code and improve it’s reproducibility is to limit the “hard-coding” of the input and output files for your script. If your code will read in data from a file, define a variable early in your code that stores the path to that file. 
+
+For example:
+
+
+```r
+input_file &lt;- "data/data.csv" 
+output_file &lt;- "data/results.csv"
+
+# read input
+input_data &lt;- read.csv(input_file)
+# get number of samples in data
+sample_number &lt;- nrow(input_data)
+# generate results
+results &lt;- some_other_function(input_file, sample_number)
+# write results
+write.table(results, results_file)
+```
+
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+
+---
+class: middle
+# Working directory
+
+- It is also worth considering what the working directory is. If the working directory must change, it is best to do that at the beginning of the script.
+
+- Be careful when using setwd(). Changing directories in a script file can limit reproducibility
+
+ - setwd() will return an error if the directory to which you’re trying to change doesn’t exist or if the user doesn’t have the correct permissions to access that directory. This becomes a problem when sharing scripts between users who have organized their directories differently.
+
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+---
+class: middle
+
+# Identify and segregate distinct components in your code
+- It’s easy to annotate and mark your code using # or #- to set off sections of your code and to make finding specific parts of your code easier.
+- For example, it’s often helpful when writing code to separate the function definitions.
+  - If you create only one or a few custom functions in your script, put them toward the top of your code. 
+  - If you have written many functions, put them all in their own .R file and then source those files. source will define all of these functions so that your code can make use of them as needed. Ex: `source("my_genius_fxns.R")`
+
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+
+
+
+---
+class: middle
+#Key Points
+- Start each program with a description of what it does.
+
+- Then load all required packages.
+
+- Consider what working directory you are in when sourcing a script.
+
+- Use comments to mark off sections of code.
+
+- Put function definitions at the top of your file, or in a separate file if there are many.
+
+- Name and style code consistently.
+
+- Break code into small, discrete pieces.
+
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+
+---
+class: middle
+#Key Points
+- Factor out common operations rather than repeating them.
+
+- Keep all of the source files for a project in one directory and use relative paths to access them.
+
+- Keep track of the memory used by your program.
+
+- Always start with a clean environment instead of saving the workspace.
+
+- Keep track of session information in your project folder.
+
+- Have someone else review your code.
+
+- Use version control.
+
+
+Reference: [SW Carpentry](http://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/index.html)
+
+
+---
+class:  inverse, center, middle
+
+#[Producing Reports With knitr](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+---
+class:  inverse, center, middle
+&lt;img src="imagens/overview2.png" style="display: block; margin: auto;" /&gt;
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+---
+class: middle
+
+#Data analysis reports
+Data analysts tend to write a lot of reports, describing their analyses and results, for their collaborators or to document their work for future reference.
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+- Package [Rmarkdown](https://rmarkdown.rstudio.com/) 
+- Package [knitr](http://yihui.name/knitr/)
+
+---
+class: middle
+#Literate programming
+Ideally, such analysis reports are reproducible documents: If an error is discovered, or if some additional subjects are added to the data, you can just re-compile the report and get the new or corrected results (versus having to reconstruct figures, paste them into a Word document, and further hand-edit various detailed results).
+
+The key tool for R is **knitr**, which allows you to create a document that is a mixture of text and some chunks of code. When the document is processed by knitr, chunks of R code will be executed, and graphs or other results inserted.
+
+This sort of idea has been called “literate programming”.
+
+- R Markdown, which mixes Markdown with R. Markdown is a light-weight mark-up language for creating web pages. 
+ 
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+ 
+---
+class: middle
+
+&lt;img src="imagens/markdown.png" style="display: block; margin: auto;" /&gt;
+ * [Rmarkdown Cheatsheet](http://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+ 
+ 
+---
+class: middle
+# How to create a Rmarkdown file?
+
+Within R Studio, click File → New File → R Markdown 
+&lt;img src="imagens/1.PNG" style="display: block; margin: auto;" /&gt;
+ 
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+---
+class: middle
+# How to create a Rmarkdown file?
+
+Within R Studio, click File → New File → R Markdown and you’ll get a dialog box like this:
+&lt;img src="imagens/New_R_Markdown.png" style="display: block; margin: auto;" /&gt;
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+ 
+ 
+---
+class: inverse, middle
+
+# yaml - metadata:
+- **y**et **a**nother **m**arkup **l**anguage 
+
+- The initial chunk of text contains instructions for R: you give the thing a title, author, and date, and tell it that you’re going to want to produce html output (in other words, a web page).
+
+
+```r
+---
+title: "Initial R Markdown document"
+author: "Karl Broman"
+date: "April 23, 2015"
+output: html_document
+---
+```
+
+
+- Be careful with the **identation**
+
+
+
+
+
+Read more: [Output Formats - R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/output-formats.html)
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+---
+class: middle
+# Markdown
+
+Markdown is a system for writing web pages by marking up the text much as you would in an email rather than writing html code. The marked-up text gets converted to html, replacing the marks with the proper html code.
+
+
+
+You make things bold using two asterisks, like this: `**bold**`, and you make things italics by using underscores, like this: `_italics_`.
+
+---
+class: middle
+# Making a bullet list
+You can make a bulleted list by writing a list with hyphens or asterisks, like this:
+
+`* bold with double-asterisks`
+
+`* italics with underscores`
+
+`* code-type font with backticks`
+
+or like this:
+
+`- bold with double-asterisks`
+
+`- italics with underscores`
+
+`- code-type font with backticks`
+
+Each will appear as:
+
+- bold with double-asterisks
+- italics with underscores
+- code-type font with backticks
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+
+---
+class: middle
+# Making a numbered list
+You can make a numbered list by just using numbers. You can use the same number over and over if you want:
+
+`1. bold with double-asterisks`
+
+`1. italics with underscores`
+
+`1. code-type font with backticks`
+
+This will appear as:
+
+1. bold with double-asterisks
+1. italics with underscores
+1. code-type font with backticks
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+
+
+
+
+---
+class: middle
+# Making section headers
+
+
+You can make section headers of different sizes by initiating a line with some number of # symbols:
+
+`# Title`
+
+`## Main section`
+
+`### Sub-section`
+
+`#### Sub-sub section`
+
+
+# Title
+## Main section
+### Sub-section
+#### Sub-sub section
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+
+
+
+---
+class: middle
+# Compile the RMarkdown
+
+You compile the R Markdown document to an html webpage by clicking the “Knit HTML” in the upper-left. 
+
+
+#Challenge
+Create a new R Markdown document. Delete all of the R code chunks and write a bit of Markdown (some sections, some italicized text, and an itemized list).
+
+Convert the document to a webpage.
+
+You can use the [Rmarkdown Cheatsheet](http://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf) for reference.
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+---
+class: middle
+# More on Markdown
+
+You can make a hyperlink like this: `[text to show](http://the-web-page.com)`.
+
+You can include an image file like this: `![caption](http://url/for/file)`
+
+You can do subscripts (e.g., F~2~) with `F~2` and superscripts (e.g., F^2^) with `F^2^`.
+
+If you know how to write equations in LaTeX, you’ll be glad to know that you can use $ $ and $$ $$ to insert math equations, like `$E = mc^2$` and
+
+`$$y = \mu + \sum_{i=1}^p \beta_i x_i + \epsilon$$`
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+---
+class: middle
+# R Code Chunks
+
+Markdown is interesting and useful, but the real power comes from mixing markdown with chunks of R code.
+This is R Markdown. When processed, the R code will be executed; if they produce figures, the figures will be inserted in the final document.
+
+&lt;img src="imagens/chunk.png" style="display: block; margin: auto;" /&gt;
+
+
+
+- It’s a good idea to give each chunk a name, as they will help you to fix errors and, if any graphs are produced, the file names are based on the name of the code chunk that produced them.
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+---
+class: middle
+# How to create a code chunk?
+
+&lt;img src="imagens/8.PNG" style="display: block; margin: auto;" /&gt;
+ 
+Tip: Keyboard shortchut for creating a code chunk is:  `Ctrl + ALt + I`.
+
+
+# Challenge
+Add code chunks to load the dplyr package
+ 
+ 
+---
+class: middle
+# How things get compiled? 
+
+- When you press the “Knit HTML” button, the R Markdown document is processed by knitr and a plain Markdown document is produced (as well as, potentially, a set of figure files): the R code is executed and replaced by both the input and the output; if figures are produced, links to those figures are included.
+
+- The Markdown and figure documents are then processed by the tool pandoc, which converts the Markdown file into an html file, with the figures embedded.
+
+
+&lt;img src="imagens/rmd-15-rmd_to_html_fig-1.png" style="display: block; margin: auto;" /&gt;
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+
+---
+class: middle
+#Chunk options
+
+There are a variety of options to affect how the code chunks are treated.
+
+- Use `echo=FALSE` to avoid having the code itself shown.
+
+- Use `results="hide"` to avoid having any results printed.
+
+- Use `eval=FALSE` to have the code shown but not evaluated.
+
+- Use `warning=FALSE` and `message=FALSE` to hide any warnings or messages produced.
+
+- Use `out.width` to control the size of the figures produced (Ex: `out.width = "100%"`.
+
+
+
+So you might write:
+
+&lt;img src="imagens/chunk_load_libraries.png" style="display: block; margin: auto;" /&gt;
+ 
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+ 
+---
+class: middle
+# Chunk global options
+Often there will be particular options that you’ll want to use repeatedly; for this, you can set global chunk options, like so:
+
+
+&lt;img src="imagens/chunk_global_options.png" style="display: block; margin: auto;" /&gt;
+
+The `fig.path` option defines where the figures will be saved. The `/` here is really important; without it, the figures would be saved in the standard place but just with names that begin with Figs.
+
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+---
+class: middle
+# Inline R code
+You can make every number in your report reproducible.
+
+
+```r
+#Use `r and ` for an in-line code chunk . 
+#The code will be executed and 
+#replaced with the value of the result.
+```
+
+
+
+
+```r
+`r code`
+
+Ex:
+
+`r round(3.14159265359, 2)`
+```
+
+3.14
+
+Don’t let these in-line chunks get split across lines.
+
+ 
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+---
+class: middle
+# Inline R code
+Another example:
+
+```r
+# The dataframe mtcars has `r nrow(mtcars)` cars. 
+```
+
+Example: The dataframe mtcars has 32 cars.
+---
+class: middle
+# Challenge
+
+
+- Try out a bit of in-line R code.
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+
+---
+class: middle
+# Example: adding a graph
+
+```r
+attach(mtcars)
+plot(wt, mpg, main="Scatterplot Example",
+xlab="Car Weight ", ylab="Miles Per Gallon ", pch=19)
+```
+
+![](index_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+---
+class: middle
+# Example: adding a simple table
+
+
+```r
+head(mtcars)
+```
+
+```
+##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+```
+---
+class: middle
+# Example: adding a table
+
+```r
+DT::datatable(head(mtcars, 10),
+  fillContainer = FALSE, options = list(pageLength = 5))
+```
+
+<div id="htmlwidget-a31815f052c45a427cdc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a31815f052c45a427cdc">{"x":{"filter":"none","fillContainer":false,"data":[["Mazda RX4","Mazda RX4 Wag","Datsun 710","Hornet 4 Drive","Hornet Sportabout","Valiant","Duster 360","Merc 240D","Merc 230","Merc 280"],[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2],[6,6,4,6,8,6,8,4,4,6],[160,160,108,258,360,225,360,146.7,140.8,167.6],[110,110,93,110,175,105,245,62,95,123],[3.9,3.9,3.85,3.08,3.15,2.76,3.21,3.69,3.92,3.92],[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44],[16.46,17.02,18.61,19.44,17.02,20.22,15.84,20,22.9,18.3],[0,0,1,1,0,1,0,1,1,1],[1,1,1,0,0,0,0,0,0,0],[4,4,4,3,3,3,3,4,4,4],[4,4,1,1,2,1,4,2,2,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+---
+class: middle
+# Adding images using Knitr
+
+Function: `knitr::include_graphics()`
+
+Example:
+
+```r
+knitr::include_graphics("https://www.r-project.org/Rlogo.png")
+```
+
+&lt;img src="https://www.r-project.org/Rlogo.png" width="50%" /&gt;
+---
+class: middle
+# Adding images using Knitr: Chunk options
+
+- `out.width = "50%"` - size of the image
+
+
+&lt;img src="https://www.r-project.org/Rlogo.png" width="50%" /&gt;
+
+[KnitR Options](https://yihui.name/knitr/options/#chunk-options)
+
+---
+class: middle
+#Adding images using Knitr: Chunk options
+
+- **Figure alignment**
+- `fig.align = 'center', 'default', **'left'**,'right'` 
+
+&lt;img src="https://www.r-project.org/Rlogo.png" width="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+- `fig.align = 'center', 'default', 'left', **'right' **`
+
+&lt;img src="https://www.r-project.org/Rlogo.png" width="20%" style="display: block; margin: auto 0 auto auto;" /&gt;
+---
+class: middle
+#Adding images using Knitr: Chunk options
+
+- Figure caption
+
+- `fig.cap="R Logo"`
+
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="https://www.r-project.org/Rlogo.png" alt="R Logo" width="50%" /&gt;
+&lt;p class="caption"&gt;R Logo&lt;/p&gt;
+&lt;/div&gt;
+---
+
+class: middle
+# Challenge
+- Add a image 
+
+- Use chunk options to control the size of a figure and to hide the code. 
+
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+---
+class: middle
+# Other output options
+You can also convert R Markdown to a PDF or a Word document. Click the little triangle next to the “Knit HTML” button to get a drop-down menu. Or you could put pdf_document or word_document in the header of the file.
+
+&lt;img src="imagens/knit.png" style="display: block; margin: auto;" /&gt;
+
+Tip: Creating PDF documents
+Creating .pdf documents may require installation of TeX. If required this is detailed in an error message.
+
+
+
+Reference: [SW Carpentry](https://swcarpentry.github.io/r-novice-gapminder/15-knitr-markdown/index.html)
+
+
+---
+class: middle
+# Other output options
+
+- You can make presentations using R, RMarkdown and KnitR - Use the package  [Xaringan](https://github.com/yihui/xaringan); (this presentation was made with Xaringan!)
+
+- Rmd compiles in a HTML format. So you can create html pages using this tool. Package **[prettydoc](https://cran.r-project.org/web/packages/prettydoc/vignettes/architect.html)** can help with some themes if  you don't know how to code in HTML and CSS.
+
+
+
+- See the [gallery](https://rmarkdown.rstudio.com/gallery.html) for examples of what you can do with Rmarkdown.
+
+- See more: https://rmarkdown.rstudio.com/index.html
+
+---
+class:  inverse, center, middle
+
+#Thank you! 
+
+Made with [Xaringan](https://github.com/yihui/xaringan) and [Kunoichi](https://github.com/emitanaka/ninja-theme).
+
+https://beatrizmilz.github.io - in Portuguese
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
